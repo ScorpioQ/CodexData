@@ -82,6 +82,8 @@ chmod +x script/build_and_run.sh
 
 输出文件位于 `dist/CodexPulse-0.1.0-universal.dmg`。默认生成的是未签名开发包；正式发布前需要配置 Apple Developer ID 签名和公证。
 
+完整的证书、私钥迁移、Developer ID 签名、Apple 公证、Universal DMG 和 GitHub Release 流程，请参阅 [发布操作手册](docs/RELEASE.md)。
+
 ## 隐私与安全
 
 - 应用没有自己的服务器
