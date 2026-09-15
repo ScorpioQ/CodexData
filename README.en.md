@@ -10,7 +10,7 @@ A lightweight macOS menu bar app for viewing your Codex 5-hour and 7-day usage l
 
 - Display usage directly in the menu bar, for example: `5h: 99% - 7d: 99%`
 - Show 5-hour and 7-day percentages and countdowns
-- Use `HH:MM` countdowns with system SF Symbols
+- Use `HH:MM:SS` and `d HH:MM:SS` (7d) countdowns with system SF Symbols
 - Always show complete usage data in the menu, even when all menu bar display options are disabled
 - Four display options that do not close the menu when clicked:
   - `5h percentage`
@@ -18,6 +18,7 @@ A lightweight macOS menu bar app for viewing your Codex 5-hour and 7-day usage l
   - `5h countdown`
   - `7d countdown`
 - Include a “Launch at Login” switch, disabled by default, using the native macOS login item mechanism
+- Include a “Show Seconds” switch, enabled by default
 - Refresh once per minute by default; usage events trigger an immediate update and restart the refresh countdown
 - Run entirely as a menu bar app without a Dock icon or main window
 - Support Chinese and English, following the system preferred language; English is used for unsupported languages

@@ -11,6 +11,7 @@ enum AppText {
 
     nonisolated static var connecting: String { localized("连接中", "Connecting") }
     nonisolated static var launchAtLogin: String { localized("开机启动", "Launch at Login") }
+    nonisolated static var showSeconds: String { localized("显示秒", "Show Seconds") }
     nonisolated static var shortPercent: String { localized("5h百分比", "5h percent") }
     nonisolated static var longPercent: String { localized("7d百分比", "7d percent") }
     nonisolated static var shortCountdown: String { localized("5h倒计时", "5h countdown") }

@@ -22,6 +22,7 @@ final class CodexDataAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegat
     private let longPercentKey = "showLongPercent"
     private let shortCountdownKey = "showShortCountdown"
     private let longCountdownKey = "showLongCountdown"
+    private let showSecondsKey = "showSeconds"
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
@@ -29,7 +30,8 @@ final class CodexDataAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegat
             shortPercentKey: true,
             longPercentKey: true,
             shortCountdownKey: false,
-            longCountdownKey: false
+            longCountdownKey: false,
+            showSecondsKey: true
         ])
 
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -44,7 +46,7 @@ final class CodexDataAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegat
             .store(in: &cancellables)
 
         titleTimer = Timer.scheduledTimer(
-            timeInterval: 60,
+            timeInterval: 1,
             target: self,
             selector: #selector(statusTimerFired(_:)),
             userInfo: nil,
@@ -73,6 +75,7 @@ final class CodexDataAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegat
         let launchAtLogin = makeLaunchAtLoginToggle()
         launchAtLoginToggleView = launchAtLogin.view as? StayOpenToggleView
         menu.addItem(launchAtLogin)
+        menu.addItem(makeToggle(title: AppText.showSeconds, key: showSecondsKey))
         menu.addItem(.separator())
 
         let shortDataRow = QuotaMenuRowView(kind: .primary)
@@ -175,6 +178,7 @@ final class CodexDataAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegat
         let now = Date()
         let short = store.windows.first { $0.kind == .primary }
         let long = store.windows.first { $0.kind == .secondary }
+        let showSeconds = UserDefaults.standard.bool(forKey: showSecondsKey)
 
         let text = MenuBarFormatting.statusText(
             windows: store.windows,
@@ -182,11 +186,12 @@ final class CodexDataAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegat
             showLongPercent: UserDefaults.standard.bool(forKey: longPercentKey),
             showShortCountdown: UserDefaults.standard.bool(forKey: shortCountdownKey),
             showLongCountdown: UserDefaults.standard.bool(forKey: longCountdownKey),
+            showSeconds: showSeconds,
             now: now
         )
 
-        shortDataRow?.update(window: short, now: now)
-        longDataRow?.update(window: long, now: now)
+        shortDataRow?.update(window: short, showSeconds: showSeconds, now: now)
+        longDataRow?.update(window: long, showSeconds: showSeconds, now: now)
 
         let statusFont = NSFont.monospacedSystemFont(ofSize: 11, weight: .regular)
         button.title = ""
@@ -365,7 +370,7 @@ final class QuotaMenuRowView: HoveringMenuView {
         addSubview(percentField)
         addSubview(timerImageView)
         addSubview(countdownField)
-        update(window: nil, now: Date())
+        update(window: nil, showSeconds: true, now: Date())
     }
 
     required init?(coder: NSCoder) {
@@ -386,7 +391,7 @@ final class QuotaMenuRowView: HoveringMenuView {
         let rowHeight: CGFloat = 18
         let y = (bounds.height - rowHeight) / 2
         let rightPadding: CGFloat = 12
-        let countdownWidth: CGFloat = 48
+        let countdownWidth: CGFloat = 82
         let iconWidth: CGFloat = 16
         let gap: CGFloat = 5
         let countdownX = bounds.width - rightPadding - countdownWidth
@@ -397,9 +402,9 @@ final class QuotaMenuRowView: HoveringMenuView {
         countdownField.frame = NSRect(x: countdownX, y: y, width: countdownWidth, height: rowHeight)
     }
 
-    func update(window: QuotaWindow?, now: Date) {
+    func update(window: QuotaWindow?, showSeconds: Bool, now: Date) {
         percentField.stringValue = MenuBarFormatting.percentText(kind: kind, window: window)
-        countdownField.stringValue = MenuBarFormatting.countdownText(window: window, now: now)
+        countdownField.stringValue = MenuBarFormatting.countdownText(kind: kind, window: window, showSeconds: showSeconds, now: now)
     }
 }
 
